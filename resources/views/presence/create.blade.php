@@ -37,10 +37,10 @@
                                     <div class="form-group">
                                         <input type="hidden" name="warrant" value="{{ $warrant->id }}">
                                         <label for="attachment">Photo <span class="text-danger">*</span></label>
-                                        <video id="video" class="form-control" width="640" height="480"
-                                            autoplay></video>
-                                        <canvas id="canvas" class="form-control d-none" width="640"
-                                            height="480"></canvas>
+                                        <div class="video-container">
+                                            <video id="video" class="form-control w-100 h-auto"></video>
+                                        </div>
+                                        <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                                         <input type="hidden" name="attachment" id="imageInput">
                                         <div class="bg-warning text-center py-2 fw-bold" id="warning-text">
                                             Please Capture Your Camera
@@ -60,8 +60,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Map Location <span class="text-danger">*</span></label>
-                                        <div id="map">
-                                        </div>
+                                        <div id="map"></div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -69,7 +68,6 @@
                                                 <label for="latitude">Latitude <span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control" id="latitude" name="latitude"
                                                     value="{{ old('latitude') }}" readonly>
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -97,8 +95,8 @@
                                     <i class="fas fa-arrow-left me-1"></i>
                                     Back
                                 </a>
-                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button" disabled>Submit<i
-                                        class="fas fa-check ms-1"></i></button>
+                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button"
+                                    disabled>Submit<i class="fas fa-check ms-1"></i></button>
                             </div>
                         </div>
                     </form>
@@ -221,8 +219,23 @@
                 });
             }
 
+            function adjustVideoCanvas() {
+                const container = document.querySelector('.video-container');
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+
+                video.width = width;
+                video.height = height;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            window.addEventListener('resize', adjustVideoCanvas);
+            window.addEventListener('load', adjustVideoCanvas);
+
             snapButton.addEventListener('click', function() {
-                context.drawImage(video, 0, 0, 640, 480);
+                adjustVideoCanvas();
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
                 resetButton.disabled = false;
                 snapButton.disabled = true;
