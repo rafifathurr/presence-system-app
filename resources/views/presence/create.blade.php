@@ -230,9 +230,6 @@
                 canvas.height = height;
             }
 
-            window.addEventListener('resize', adjustVideoCanvas);
-            window.addEventListener('load', adjustVideoCanvas);
-
             snapButton.addEventListener('click', function() {
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
