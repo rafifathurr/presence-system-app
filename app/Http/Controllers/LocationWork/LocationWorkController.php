@@ -114,7 +114,8 @@ class LocationWorkController extends Controller
              */
             $name_check = LocationWork::whereNull('deleted_by')
                 ->whereNull('deleted_at')
-                ->where('name', 'like', '%' . $request->name . '%')
+                ->where('name', $request->name)
+                ->where('name', strtolower($request->name))
                 ->first();
 
             /**
@@ -274,8 +275,9 @@ class LocationWorkController extends Controller
              */
             $name_check = LocationWork::whereNull('deleted_by')
                 ->whereNull('deleted_at')
+                ->where('name', $request->name)
+                ->where('name', strtolower($request->name))
                 ->where('id', '!=', $id)
-                ->where('name', 'like', '%' . $request->name . '%')
                 ->first();
 
             /**

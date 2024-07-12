@@ -76,7 +76,8 @@ class DivisionController extends Controller
              * Validation Unique Field Record
              */
             $name_check = Division::whereNull('deleted_at')
-                ->where('name', 'like', '%' . $request->name . '%')
+                ->where('name', $request->name)
+                ->where('name', strtolower($request->name))
                 ->first();
 
             /**
@@ -202,7 +203,9 @@ class DivisionController extends Controller
              * Validation Unique Field Record
              */
             $name_check = Division::whereNull('deleted_at')
-                ->where('name', 'like', '%' . $request->name . '%')
+                ->where('name', $request->name)
+                ->where('name', strtolower($request->name))
+                ->where('id', '!=', $id)
                 ->first();
 
             /**
