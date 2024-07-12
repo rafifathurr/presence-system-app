@@ -50,9 +50,4 @@
             ]
         });
     }
-
-    function destroy(id) {
-        const url = '{{ url('warrant') }}/' + id;
-        destroyRecord(url)
-    }
 </script>

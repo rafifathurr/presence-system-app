@@ -39,7 +39,7 @@
     }
 
     function destroy(id) {
-        const url = '{{ url('user-management') }}/' + id;
+        const url = '{{ url('division') }}/' + id;
         destroyRecord(url)
     }
 </script>

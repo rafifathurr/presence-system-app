@@ -51,7 +51,7 @@
     }
 
     function destroy(id) {
-        const url = '{{ url('warrant') }}/' + id;
+        const url = '{{ url('location-work') }}/' + id;
         destroyRecord(url)
     }
 </script>
