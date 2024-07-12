@@ -39,6 +39,12 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Division</label>
+                            <div class="col-sm-9 col-form-label">
+                                {{ !is_null($user->division_id) ? $user->division->name : '-' }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Updated At</label>
                             <div class="col-sm-9 col-form-label">
                                 {{ date('d F Y H:i:s', strtotime($user->updated_at)) }}
