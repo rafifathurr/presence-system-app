@@ -268,7 +268,6 @@
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
-                console.log(dataURL);
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
