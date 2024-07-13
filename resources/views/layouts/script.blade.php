@@ -35,6 +35,8 @@
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-geosearch@3.1.0/dist/bundle.min.js"></script>
 
+<script src="{{ asset('assets/js/plugin/face-api/face-api.min.js') }}"></script>
+
 <!-- Swal Alert 2 Function -->
 @include('js.global')
 @stack('javascript-bottom')

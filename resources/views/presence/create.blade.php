@@ -209,49 +209,89 @@
             let context = canvas.getContext('2d');
             let snapButton = document.getElementById('capture');
             let resetButton = document.getElementById('reset');
+            let baseUrl = document.URL.substr(0, document.URL.lastIndexOf('/'));
 
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({
-                    video: true
-                }).then(function(stream) {
-                    video.srcObject = stream;
-                    video.play();
-                });
+            Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(baseUrl + "/models"),
+                faceapi.nets.faceLandmark68Net.loadFromUri(baseUrl + "/models"),
+                faceapi.nets.faceRecognitionNet.loadFromUri(baseUrl + "/models"),
+                faceapi.nets.faceExpressionNet.loadFromUri(baseUrl + "/models"),
+                faceapi.nets.ageGenderNet.loadFromUri(baseUrl + "/models")
+            ]).then(startVideo);
+
+            function startVideo() {
+                navigator.getUserMedia({
+                        video: {}
+                    },
+                    stream => (video.srcObject = stream),
+                    err => console.error(err)
+                );
             }
 
-            function adjustVideoCanvas() {
-                const container = document.querySelector('.video-container');
-                const width = container.clientWidth;
-                const height = container.clientHeight;
+            video.addEventListener("playing", () => {
+                console.log("playing called");
+                const canvas = faceapi.createCanvasFromMedia(video);
+                let container = document.querySelector(".container");
+                container.append(canvas);
 
-                video.width = width;
-                video.height = height;
-                canvas.width = width;
-                canvas.height = height;
-            }
+                const displaySize = {
+                    width: video.width,
+                    height: video.height
+                };
+                faceapi.matchDimensions(canvas, displaySize);
 
-            snapButton.addEventListener('click', function() {
-                adjustVideoCanvas();
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                let dataURL = canvas.toDataURL('image/png');
-                resetButton.disabled = false;
-                snapButton.disabled = true;
-                video.classList.add('d-none');
-                canvas.classList.remove('d-none');
-                $('#imageInput').val(dataURL);
-                $('#warning-text').addClass('d-none');
-                $('#success-text').removeClass('d-none');
+                setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi
+                        .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+
+                    if (detections.map(d => d.descriptor).length > 0) {
+                        console.log(detections.map(d => d.descriptor));
+                    }
+                }, 1000);
             });
 
-            resetButton.addEventListener('click', function() {
-                resetButton.disabled = true;
-                snapButton.disabled = false;
-                video.classList.remove('d-none');
-                canvas.classList.add('d-none');
-                $('#imageInput').val('');
-                $('#warning-text').removeClass('d-none');
-                $('#success-text').addClass('d-none');
-            });
+            // if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            //     navigator.mediaDevices.getUserMedia({
+            //         video: true
+            //     }).then(function(stream) {
+            //         video.srcObject = stream;
+            //         video.play();
+            //     });
+            // }
+
+            // function adjustVideoCanvas() {
+            //     const container = document.querySelector('.video-container');
+            //     const width = container.clientWidth;
+            //     const height = container.clientHeight;
+
+            //     video.width = width;
+            //     video.height = height;
+            //     canvas.width = width;
+            //     canvas.height = height;
+            // }
+
+            // snapButton.addEventListener('click', function() {
+            //     adjustVideoCanvas();
+            //     context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            //     let dataURL = canvas.toDataURL('image/png');
+            //     resetButton.disabled = false;
+            //     snapButton.disabled = true;
+            //     video.classList.add('d-none');
+            //     canvas.classList.remove('d-none');
+            //     $('#imageInput').val(dataURL);
+            //     $('#warning-text').addClass('d-none');
+            //     $('#success-text').removeClass('d-none');
+            // });
+
+            // resetButton.addEventListener('click', function() {
+            //     resetButton.disabled = true;
+            //     snapButton.disabled = false;
+            //     video.classList.remove('d-none');
+            //     canvas.classList.add('d-none');
+            //     $('#imageInput').val('');
+            //     $('#warning-text').removeClass('d-none');
+            //     $('#success-text').addClass('d-none');
+            // });
 
             map.dragging.disable();
             map.touchZoom.disable();
