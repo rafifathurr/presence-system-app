@@ -267,7 +267,6 @@
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
                 resetButton.disabled = false;
-                snapButton.disabled = true;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
                 $('#imageInput').val(dataURL);
@@ -277,7 +276,6 @@
 
             resetButton.addEventListener('click', function() {
                 resetButton.disabled = true;
-                snapButton.disabled = false;
                 video.classList.remove('d-none');
                 canvas.classList.add('d-none');
                 $('#imageInput').val('');
