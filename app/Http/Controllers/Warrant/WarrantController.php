@@ -60,12 +60,16 @@ class WarrantController extends Controller
             /**
              * Get All Warrant
              */
-            $warrants = Warrant::whereNull('deleted_by')->whereNull('deleted_at')->get();
+            $warrants = Warrant::with(['presence'])
+                ->whereNull('deleted_by')
+                ->whereNull('deleted_at')
+                ->get();
         } else {
             /**
              * Get All Warrant by User
              */
-            $warrants = Warrant::whereNull('deleted_by')
+            $warrants = Warrant::with(['presence'])
+                ->whereNull('deleted_by')
                 ->whereNull('deleted_at')
                 ->whereHas('warrantUser', function ($query) {
                     $query->where('user_id', Auth::user()->id);
@@ -105,8 +109,13 @@ class WarrantController extends Controller
                  * Validation Role Has Access Edit and Delete
                  */
                 if (User::find(Auth::user()->id)->hasRole('admin')) {
-                    $btn_action .= '<a href="' . route('warrant.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning my-1 ms-1" title="Ubah"><i class="fas fa-pencil-alt"></i></a>';
-                    $btn_action .= '<button class="btn btn-sm btn-danger my-1 ms-1" onclick="destroy(' . $data->id . ')" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    /**
+                     * Allow Edit or Delete when presence empty
+                     */
+                    if (empty($data->presence)) {
+                        $btn_action .= '<a href="' . route('warrant.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning my-1 ms-1" title="Ubah"><i class="fas fa-pencil-alt"></i></a>';
+                        $btn_action .= '<button class="btn btn-sm btn-danger my-1 ms-1" onclick="destroy(' . $data->id . ')" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    }
                 }
                 return $btn_action;
             })
