@@ -242,14 +242,14 @@
 
                 let encode_face;
 
-                setInterval(async () => {
+                const intervalId = setInterval(async () => {
                     const detections = await faceapi.detectAllFaces(video, new faceapi
                         .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
 
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
                         snapCapture();
-                        return false;
+                        clearInterval(intervalId);
                     }
                 }, 1000);
             });
@@ -269,6 +269,7 @@
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
+                console.log(dataUrl);
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
