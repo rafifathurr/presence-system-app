@@ -109,6 +109,15 @@
         <script>
             let marker;
             let circleMarker;
+
+            let video = document.getElementById('video');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            let resetButton = document.getElementById('reset');
+            let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
+            let baseUrl = baseUrlPresence.split('/presence').join('');
+            let intervalId;
+
             let map = L.map('map', {
                 editable: true,
                 minZoom: 2.4,
@@ -206,13 +215,6 @@
             }
 
             function setupCamera() {
-                let video = document.getElementById('video');
-                let canvas = document.getElementById('canvas');
-                let context = canvas.getContext('2d');
-                let resetButton = document.getElementById('reset');
-                let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
-                let baseUrl = baseUrlPresence.split('/presence').join('');
-                let intervalId;
 
                 Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(baseUrl + "/models"),
