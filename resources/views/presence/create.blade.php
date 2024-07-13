@@ -248,7 +248,11 @@
 
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
-                        snapCapture();
+                        let urlCapture = getUrlPath();
+
+                        if (urlCapture) {
+                            snapCapture(urlCapture);
+                        }
                     }
                 }, 1000);
             });
@@ -264,18 +268,25 @@
                 canvas.height = height;
             }
 
-            function snapCapture() {
+            function getUrlPath() {
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
+
+                if (dataUrl != undefined) {
+                    return dataUrl;
+                } else {
+                    return false;
+                }
+            }
+
+            function snapCapture(dataUrl) {
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
                 $('#imageInput').val(dataURL);
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
-
-                console.log(dataUrl);
                 clearInterval(intervalId);
             }
 
