@@ -242,7 +242,11 @@
                 faceapi.matchDimensions(canvas, displaySize);
 
                 let encode_face;
+                detection();
 
+            });
+
+            function detection() {
                 intervalId = setInterval(async () => {
                     const detections = await faceapi.detectAllFaces(video, new faceapi
                         .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
@@ -252,7 +256,7 @@
                         snapCapture();
                     }
                 }, 5000);
-            });
+            }
 
             function adjustVideoCanvas() {
                 const container = document.querySelector('.video-container');
@@ -285,6 +289,7 @@
                 $('#imageInput').val('');
                 $('#warning-text').removeClass('d-none');
                 $('#success-text').addClass('d-none');
+                detection();
             });
 
             map.dragging.disable();
