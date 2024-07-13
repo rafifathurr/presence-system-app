@@ -39,22 +39,21 @@
                                         <label for="attachment">Photo <span class="text-danger">*</span></label>
                                         <div class="video-container">
                                             {{-- <video id="video" class="form-control w-100 h-auto"></video> --}}
-                                            <video id="video" height="500" width="500" class="form-control" autoplay muted></video>
+                                            <video id="video" height="500" width="500" class="form-control"
+                                                autoplay muted></video>
                                         </div>
                                         <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                                         <input type="hidden" name="attachment" id="imageInput">
                                         <div class="bg-warning text-center py-2 fw-bold" id="warning-text">
-                                            Please Capture Your Camera
+                                            Please Take Your Face to Camera
                                         </div>
                                         <div class="bg-success text-center text-white py-2 fw-bold d-none"
                                             id="success-text">
-                                            Capture Success
+                                            Capture Face Success
                                         </div>
                                         <div class="text-center mt-2">
                                             <button type="button" class="btn btn-sm btn-warning mt-2" id="reset"
                                                 disabled><i class="fas fa-undo me-1"></i> Reset</button>
-                                            <button type="button" class="btn btn-sm btn-primary mt-2" id="capture"><i
-                                                    class="fas fa-camera me-1"></i> Capture</button>
                                         </div>
                                     </div>
                                 </div>
@@ -96,8 +95,8 @@
                                     <i class="fas fa-arrow-left me-1"></i>
                                     Back
                                 </a>
-                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button"
-                                    disabled>Submit<i class="fas fa-check ms-1"></i></button>
+                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button" disabled>Submit<i
+                                        class="fas fa-check ms-1"></i></button>
                             </div>
                         </div>
                     </form>
@@ -208,7 +207,6 @@
             let video = document.getElementById('video');
             let canvas = document.getElementById('canvas');
             let context = canvas.getContext('2d');
-            let snapButton = document.getElementById('capture');
             let resetButton = document.getElementById('reset');
             let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
             let baseUrl = baseUrlPresence.split('/presence').join('');
@@ -248,52 +246,44 @@
 
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
+                        snapCapture();
                     }
                 }, 1000);
             });
 
-            // if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            //     navigator.mediaDevices.getUserMedia({
-            //         video: true
-            //     }).then(function(stream) {
-            //         video.srcObject = stream;
-            //         video.play();
-            //     });
-            // }
+            function adjustVideoCanvas() {
+                const container = document.querySelector('.video-container');
+                const width = container.clientWidth;
+                const height = container.clientHeight;
 
-            // function adjustVideoCanvas() {
-            //     const container = document.querySelector('.video-container');
-            //     const width = container.clientWidth;
-            //     const height = container.clientHeight;
+                video.width = width;
+                video.height = height;
+                canvas.width = width;
+                canvas.height = height;
+            }
 
-            //     video.width = width;
-            //     video.height = height;
-            //     canvas.width = width;
-            //     canvas.height = height;
-            // }
+            function snapCapture() {
+                adjustVideoCanvas();
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                let dataURL = canvas.toDataURL('image/png');
+                resetButton.disabled = false;
+                snapButton.disabled = true;
+                video.classList.add('d-none');
+                canvas.classList.remove('d-none');
+                $('#imageInput').val(dataURL);
+                $('#warning-text').addClass('d-none');
+                $('#success-text').removeClass('d-none');
+            }
 
-            // snapButton.addEventListener('click', function() {
-            //     adjustVideoCanvas();
-            //     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            //     let dataURL = canvas.toDataURL('image/png');
-            //     resetButton.disabled = false;
-            //     snapButton.disabled = true;
-            //     video.classList.add('d-none');
-            //     canvas.classList.remove('d-none');
-            //     $('#imageInput').val(dataURL);
-            //     $('#warning-text').addClass('d-none');
-            //     $('#success-text').removeClass('d-none');
-            // });
-
-            // resetButton.addEventListener('click', function() {
-            //     resetButton.disabled = true;
-            //     snapButton.disabled = false;
-            //     video.classList.remove('d-none');
-            //     canvas.classList.add('d-none');
-            //     $('#imageInput').val('');
-            //     $('#warning-text').removeClass('d-none');
-            //     $('#success-text').addClass('d-none');
-            // });
+            resetButton.addEventListener('click', function() {
+                resetButton.disabled = true;
+                snapButton.disabled = false;
+                video.classList.remove('d-none');
+                canvas.classList.add('d-none');
+                $('#imageInput').val('');
+                $('#warning-text').removeClass('d-none');
+                $('#success-text').addClass('d-none');
+            });
 
             map.dragging.disable();
             map.touchZoom.disable();
