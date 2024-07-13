@@ -254,7 +254,7 @@
                             snapCapture(urlCapture);
                         }
                     }
-                }, 1000);
+                }, 10000);
             });
 
             function adjustVideoCanvas() {
@@ -271,7 +271,7 @@
             function getUrlPath() {
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                let dataURL = canvas.toDataURL('image/png');
+                let dataUrl = canvas.toDataURL('image/png');
 
                 if (dataUrl != undefined) {
                     return dataUrl;
