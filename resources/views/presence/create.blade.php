@@ -209,7 +209,8 @@
             let context = canvas.getContext('2d');
             let snapButton = document.getElementById('capture');
             let resetButton = document.getElementById('reset');
-            let baseUrl = document.URL.substr(0, document.URL.lastIndexOf('/'));
+            let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
+            let baseUrl = baseUrlPresence.split('/presence').join('');
 
             Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri(baseUrl + "/models"),

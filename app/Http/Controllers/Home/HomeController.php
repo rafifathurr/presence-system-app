@@ -54,7 +54,7 @@ class HomeController extends Controller
                     $data['presence'] = false;
                 }
             } else {
-                $data['presence'] = true;
+                $data['presence'] = false;
             }
         } else {
             $data['presence'] = false;
