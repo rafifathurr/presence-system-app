@@ -247,14 +247,11 @@
                         .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
 
                     if (detections.map(d => d.descriptor).length > 0) {
-                        encode_face = detections.map(d => d.descriptor);
+                        console.log(detections.map(d => d.descriptor));
+                        snapCapture();
+                        return;
                     }
                 }, 1000);
-
-                console.log(encode_face);
-                if (encode_face != null) {
-                    snapCapture();
-                }
             });
 
             function adjustVideoCanvas() {
