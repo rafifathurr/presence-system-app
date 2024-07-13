@@ -240,11 +240,19 @@
                 };
                 faceapi.matchDimensions(canvas, displaySize);
 
-                const detections = await faceapi.detectAllFaces(video, new faceapi
-                    .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                let encode_face;
 
-                if (detections.map(d => d.descriptor).length > 0) {
-                    console.log(detections.map(d => d.descriptor));
+                setInterval(async () => {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi
+                        .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+
+                    if (detections.map(d => d.descriptor).length > 0) {
+                        encode_face = detections.map(d => d.descriptor);
+                    }
+                }, 1000);
+
+                console.log(encode_face);
+                if (encode_face != null) {
                     snapCapture();
                 }
             });
