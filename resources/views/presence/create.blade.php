@@ -248,13 +248,9 @@
 
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
-                        let urlCapture = getUrlPath();
-
-                        if (urlCapture) {
-                            snapCapture(urlCapture);
-                        }
+                        snapCapture();
                     }
-                }, 10000);
+                }, 5000);
             });
 
             function adjustVideoCanvas() {
@@ -268,23 +264,15 @@
                 canvas.height = height;
             }
 
-            function getUrlPath() {
+            function snapCapture() {
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                let dataUrl = canvas.toDataURL('image/png');
-
-                if (dataUrl != undefined) {
-                    return dataUrl;
-                } else {
-                    return false;
-                }
-            }
-
-            function snapCapture(dataUrl) {
+                let dataURL = canvas.toDataURL('image/png');
+                console.log(dataURL);
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
-                $('#imageInput').val(dataUrl);
+                $('#imageInput').val(dataURL);
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
                 clearInterval(intervalId);
