@@ -284,7 +284,7 @@
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
-                $('#imageInput').val(dataURL);
+                $('#imageInput').val(dataUrl);
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
                 clearInterval(intervalId);
