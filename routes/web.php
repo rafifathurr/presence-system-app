@@ -64,7 +64,6 @@ Route::group(['middleware' => ['role:admin']], function () {
      */
     Route::group(['controller' => UserManagementController::class, 'prefix' => 'user-management', 'as' => 'user-management.'], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
-        Route::get('verification/{id}', 'verification')->name('verification');
         Route::post('verification/{id}', 'verificationUpdate')->name('verificationUpdate');
     });
     Route::resource('user-management', UserManagementController::class, ['except' => ['show']])->parameters(['user-management' => 'id']);

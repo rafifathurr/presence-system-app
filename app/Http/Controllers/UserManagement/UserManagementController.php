@@ -232,7 +232,8 @@ class UserManagementController extends Controller
                     if (!is_null($user->face_encoding)) {
                         $data['verification_status'] = '<span class="badge badge-success p-1 px-2 rounded-pill">Verify</span>';
                     } else {
-                        $data['verification_status'] = '<span class="badge badge-danger p-1 px-2 rounded-pill">Unverify</span><a class="ms-2" target="_blank" href="' . route('user-management.verification', ['id' => $user->id]) . '">Verify Now<i class="fas fa-external-link-alt ms-1"></i></a>';
+                        $data['verification_status'] = '<span class="badge badge-danger p-1 px-2 rounded-pill">Unverify</span><a class="ms-2" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#verificationModal">Verify Now<i class="fas fa-external-link-alt ms-1"></i></a>';
                     }
                 } else {
                     $data['verification_status_show'] = false;
@@ -455,35 +456,6 @@ class UserManagementController extends Controller
                 ->back()
                 ->with(['failed' => $e->getMessage()])
                 ->withInput();
-        }
-    }
-
-    /**
-     * Show the form for verification the specified resource.
-     */
-    public function verification(string $id)
-    {
-        try {
-            /**
-             * Get User Record from id
-             */
-            $user = User::find($id);
-
-            /**
-             * Validation User id
-             */
-            if (!is_null($user)) {
-                $data['user'] = $user;
-                return view('user_management.verification', $data);
-            } else {
-                return redirect()
-                    ->back()
-                    ->with(['failed' => 'Invalid Request!']);
-            }
-        } catch (Exception $e) {
-            return redirect()
-                ->back()
-                ->with(['failed' => $e->getMessage()]);
         }
     }
 

@@ -118,6 +118,7 @@
             let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/')) + '/';
             let baseUrl = baseUrlPresence.split('/presence/').join('');
             let intervalId;
+            let localStream;
 
             let map = L.map('map', {
                 editable: true,
@@ -229,6 +230,7 @@
                     }).then(function(stream) {
                         video.srcObject = stream;
                         video.play();
+                        localStream = stream.getTracks();
                     });
                 }
 
@@ -282,6 +284,7 @@
                 $('#imageInput').val(dataURL);
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
+                stopCamera();
                 clearInterval(intervalId);
             }
 
@@ -312,6 +315,12 @@
                 });
             }
 
+            function stopCamera() {
+                localStream.forEach((track) => {
+                    track.stop();
+                });
+            }
+
             resetButton.addEventListener('click', function() {
                 resetButton.disabled = true;
                 video.classList.remove('d-none');
@@ -319,6 +328,7 @@
                 $('#imageInput').val('');
                 $('#warning-text').removeClass('d-none');
                 $('#success-text').addClass('d-none');
+                setupCamera();
                 detection();
             });
 
