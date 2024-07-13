@@ -198,51 +198,53 @@
 
                 if (distance <= radius) {
                     $('#submit-button').attr('disabled', false);
+                    setupCamera();
                 } else {
                     $('#submit-button').attr('disabled', true);
                     swalWarning('Your Location Far From Location');
                 }
             }
 
-            let video = document.getElementById('video');
-            let canvas = document.getElementById('canvas');
-            let context = canvas.getContext('2d');
-            let resetButton = document.getElementById('reset');
-            let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
-            let baseUrl = baseUrlPresence.split('/presence').join('');
-            let intervalId;
+            function setupCamera() {
+                let video = document.getElementById('video');
+                let canvas = document.getElementById('canvas');
+                let context = canvas.getContext('2d');
+                let resetButton = document.getElementById('reset');
+                let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
+                let baseUrl = baseUrlPresence.split('/presence').join('');
+                let intervalId;
 
-            Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(baseUrl + "/models"),
-                faceapi.nets.faceLandmark68Net.loadFromUri(baseUrl + "/models"),
-                faceapi.nets.faceRecognitionNet.loadFromUri(baseUrl + "/models"),
-            ]).then(startVideo);
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(baseUrl + "/models"),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(baseUrl + "/models"),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(baseUrl + "/models"),
+                ]).then(startVideo);
 
-            function startVideo() {
-                navigator.mediaDevices.getUserMedia({
-                    video: true
-                }).then(function(stream) {
-                    video.srcObject = stream;
-                    video.play();
+                function startVideo() {
+                    navigator.mediaDevices.getUserMedia({
+                        video: true
+                    }).then(function(stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    });
+                }
+
+                video.addEventListener("playing", () => {
+                    const canvas = faceapi.createCanvasFromMedia(video);
+                    let container = document.querySelector(".container");
+                    container.append(canvas);
+
+                    const displaySize = {
+                        width: video.width,
+                        height: video.height
+                    };
+                    faceapi.matchDimensions(canvas, displaySize);
+
+                    let encode_face;
+                    detection();
+
                 });
             }
-
-            video.addEventListener("playing", () => {
-                console.log("playing called");
-                const canvas = faceapi.createCanvasFromMedia(video);
-                let container = document.querySelector(".container");
-                container.append(canvas);
-
-                const displaySize = {
-                    width: video.width,
-                    height: video.height
-                };
-                faceapi.matchDimensions(canvas, displaySize);
-
-                let encode_face;
-                detection();
-
-            });
 
             function detection() {
                 intervalId = setInterval(async () => {
