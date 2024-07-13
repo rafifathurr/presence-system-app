@@ -220,12 +220,12 @@
             ]).then(startVideo);
 
             function startVideo() {
-                navigator.getUserMedia({
-                        video: true
-                    },
-                    stream => (video.srcObject = stream),
-                    err => console.error(err)
-                );
+                navigator.mediaDevices.getUserMedia({
+                    video: true
+                }).then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                });
             }
 
             video.addEventListener("playing", () => {
@@ -250,6 +250,7 @@
                         console.log(detections.map(d => d.descriptor));
                         snapCapture();
                         clearInterval(intervalId);
+                        return true;
                     }
                 }, 1000);
             });
