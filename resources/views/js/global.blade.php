@@ -46,6 +46,18 @@
         });
     }
 
+    function swalSuccess(message) {
+        Swal.fire({
+            icon: 'success',
+            title: message,
+            customClass: {
+                confirmButton: 'btn btn-primary mb-3',
+            },
+            buttonsStyling: false,
+            timer: 3000,
+        });
+    }
+
     function swalError(message) {
         Swal.fire({
             icon: 'error',

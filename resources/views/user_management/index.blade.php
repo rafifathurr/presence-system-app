@@ -22,6 +22,7 @@
                                         <th>No</th>
                                         <th>Employee Number</th>
                                         <th>Name</th>
+                                        <th>Status</th>
                                         <th>Role</th>
                                         <th>Division</th>
                                         <th>Action</th>

@@ -64,8 +64,10 @@ Route::group(['middleware' => ['role:admin']], function () {
      */
     Route::group(['controller' => UserManagementController::class, 'prefix' => 'user-management', 'as' => 'user-management.'], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
+        Route::get('verification/{id}', 'verification')->name('verification');
+        Route::post('verification/{id}', 'verificationUpdate')->name('verificationUpdate');
     });
-    Route::resource('user-management', UserManagementController::class)->parameters(['user-management' => 'id']);
+    Route::resource('user-management', UserManagementController::class, ['except' => ['show']])->parameters(['user-management' => 'id']);
 });
 
 /**
@@ -92,4 +94,12 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
         Route::get('datatable', 'dataTable')->name('dataTable');
     });
     Route::resource('warrant', WarrantController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['warrant' => 'id']);
+
+    /**
+     * Route User Management Module
+     */
+    Route::group(['controller' => UserManagementController::class, 'prefix' => 'user-management', 'as' => 'user-management.'], function () {
+        Route::get('face-verification', 'faceVerification')->name('faceVerification');
+    });
+    Route::resource('user-management', UserManagementController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['user-management' => 'id']);
 });

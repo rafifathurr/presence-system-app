@@ -27,6 +27,9 @@
                         </li>
                         <li>
                             <div class="dropdown-divider"></div>
+                            <a class="dropdown-item py-2"
+                                href="{{ route('user-management.show', ['id' => Auth::user()->id]) }}"><i
+                                    class="fas fa-user me-2"></i>My Profile</a>
                             <a class="dropdown-item py-2" href="{{ route('logout') }}"><i
                                     class="fas fa-sign-out-alt me-2"></i>Logout</a>
                         </li>

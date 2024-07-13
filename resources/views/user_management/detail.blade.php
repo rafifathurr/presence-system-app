@@ -20,6 +20,14 @@
                                 {{ $user->employee_number }}
                             </div>
                         </div>
+                        @if ($verification_status_show)
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Employee Number</label>
+                                <div class="col-sm-9 col-form-label">
+                                    {!! $verification_status !!}
+                                </div>
+                            </div>
+                        @endif
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Username</label>
                             <div class="col-sm-9 col-form-label">
@@ -53,7 +61,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="form-group text-end mt-2">
-                            <a href="{{ route('user-management.index') }}" class="btn btn-sm btn-danger">
+                            <a href="{{ url()->previous() }}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-arrow-left me-1"></i>
                                 Back
                             </a>

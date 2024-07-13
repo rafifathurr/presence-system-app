@@ -31,6 +31,11 @@
                     defaultContent: '-',
                 },
                 {
+                    data: 'status',
+                    className: 'text-center',
+                    defaultContent: '-',
+                },
+                {
                     data: 'role',
                     defaultContent: '-',
                 },

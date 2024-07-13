@@ -36,6 +36,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="hidden" name="warrant" value="{{ $warrant->id }}">
+                                        <input type="hidden" id="user" value="{{ Auth::user()->id }}">
                                         <label for="attachment">Photo <span class="text-danger">*</span></label>
                                         <div class="video-container">
                                             {{-- <video id="video" class="form-control w-100 h-auto"></video> --}}
@@ -49,7 +50,7 @@
                                         </div>
                                         <div class="bg-success text-center text-white py-2 fw-bold d-none"
                                             id="success-text">
-                                            Capture Face Success
+
                                         </div>
                                         <div class="text-center mt-2">
                                             <button type="button" class="btn btn-sm btn-warning mt-2" id="reset"
@@ -95,8 +96,8 @@
                                     <i class="fas fa-arrow-left me-1"></i>
                                     Back
                                 </a>
-                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button" disabled>Submit<i
-                                        class="fas fa-check ms-1"></i></button>
+                                <button type="submit" class="btn btn-sm btn-primary" id="submit-button"
+                                    disabled>Submit<i class="fas fa-check ms-1"></i></button>
                             </div>
                         </div>
                     </form>
@@ -114,8 +115,8 @@
             let canvas = document.getElementById('canvas');
             let context = canvas.getContext('2d');
             let resetButton = document.getElementById('reset');
-            let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
-            let baseUrl = baseUrlPresence.split('/presence').join('');
+            let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/')) + '/';
+            let baseUrl = baseUrlPresence.split('/presence/').join('');
             let intervalId;
 
             let map = L.map('map', {
@@ -254,8 +255,8 @@
                         .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
 
                     if (detections.map(d => d.descriptor).length > 0) {
-                        console.log(detections.map(d => d.descriptor));
-                        snapCapture();
+                        const descriptor = detections[0].descriptor;
+                        verification(JSON.stringify(descriptor));
                     }
                 }, 5000);
             }
@@ -282,6 +283,33 @@
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
                 clearInterval(intervalId);
+            }
+
+            function verification(encoding) {
+                let token = $('meta[name="token"]').attr('content');
+                let user = $('#user').val();
+
+                $.ajax({
+                    url: "{{ url('user-management/face-verification') }}",
+                    type: 'GET',
+                    cache: false,
+                    data: {
+                        // _token: token,
+                        id: user,
+                        face_encoding: encoding
+                    },
+                    success: function(data) {
+                        if (data.detection) {
+                            $('#success-text').html(data.message);
+                            snapCapture();
+                        } else {
+                            swalError(data.message);
+                        }
+                    },
+                    error: function(xhr, error, code) {
+                        swalError(error);
+                    }
+                });
             }
 
             resetButton.addEventListener('click', function() {
