@@ -240,15 +240,13 @@
                 };
                 faceapi.matchDimensions(canvas, displaySize);
 
-                setInterval(async () => {
-                    const detections = await faceapi.detectAllFaces(video, new faceapi
-                        .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+                const detections = await faceapi.detectAllFaces(video, new faceapi
+                    .TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
 
-                    if (detections.map(d => d.descriptor).length > 0) {
-                        console.log(detections.map(d => d.descriptor));
-                        snapCapture();
-                    }
-                }, 1000);
+                if (detections.map(d => d.descriptor).length > 0) {
+                    console.log(detections.map(d => d.descriptor));
+                    snapCapture();
+                }
             });
 
             function adjustVideoCanvas() {
