@@ -38,7 +38,8 @@
                                         <input type="hidden" name="warrant" value="{{ $warrant->id }}">
                                         <label for="attachment">Photo <span class="text-danger">*</span></label>
                                         <div class="video-container">
-                                            <video id="video" class="form-control w-100 h-auto"></video>
+                                            {{-- <video id="video" class="form-control w-100 h-auto"></video> --}}
+                                            <video id="video" height="500" width="500" class="form-control" autoplay muted></video>
                                         </div>
                                         <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                                         <input type="hidden" name="attachment" id="imageInput">
