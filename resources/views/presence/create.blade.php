@@ -221,7 +221,7 @@
 
             function startVideo() {
                 navigator.getUserMedia({
-                        video: {}
+                        video: true
                     },
                     stream => (video.srcObject = stream),
                     err => console.error(err)
@@ -249,7 +249,7 @@
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
                         snapCapture();
-                        return;
+                        return false;
                     }
                 }, 1000);
             });
