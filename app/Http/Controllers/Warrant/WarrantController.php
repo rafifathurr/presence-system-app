@@ -112,6 +112,7 @@ class WarrantController extends Controller
                     /**
                      * Allow Edit or Delete when presence empty
                      */
+                    dd($data->presence);
                     if (empty($data->presence)) {
                         $btn_action .= '<a href="' . route('warrant.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning my-1 ms-1" title="Ubah"><i class="fas fa-pencil-alt"></i></a>';
                         $btn_action .= '<button class="btn btn-sm btn-danger my-1 ms-1" onclick="destroy(' . $data->id . ')" title="Hapus"><i class="fas fa-trash"></i></button>';
