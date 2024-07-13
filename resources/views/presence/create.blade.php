@@ -249,8 +249,6 @@
                     if (detections.map(d => d.descriptor).length > 0) {
                         console.log(detections.map(d => d.descriptor));
                         snapCapture();
-                        clearInterval(intervalId);
-                        return true;
                     }
                 }, 1000);
             });
@@ -270,13 +268,15 @@
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
-                console.log(dataUrl);
                 resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
                 $('#imageInput').val(dataURL);
                 $('#warning-text').addClass('d-none');
                 $('#success-text').removeClass('d-none');
+
+                console.log(dataUrl);
+                clearInterval(intervalId);
             }
 
             resetButton.addEventListener('click', function() {
