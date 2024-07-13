@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('employee_number')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->text('face_encoding')->nullable();
+            $table->json('face_encoding')->nullable();
             $table->integer('division_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
