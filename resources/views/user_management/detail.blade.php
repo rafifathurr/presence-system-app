@@ -22,11 +22,20 @@
                         </div>
                         @if ($verification_status_show)
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Employee Number</label>
+                                <label class="col-sm-3 col-form-label">Status</label>
                                 <div class="col-sm-9 col-form-label">
                                     {!! $verification_status !!}
                                 </div>
                             </div>
+                            @if (!is_null($user->face_image))
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Image Dataset</label>
+                                    <div class="col-sm-9 col-form-label">
+                                        <img width="50%" alt="upload" src="{{ asset($user->face_image) }}"
+                                            class="rounded-3 border border-1-default">
+                                    </div>
+                                </div>
+                            @endif
                         @endif
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Username</label>
@@ -187,9 +196,11 @@
 
             function snapCapture() {
                 adjustVideoCanvas();
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
 
                 if (dataURL != 'data:,') {
+
                     $('#face_image').val(dataURL);
                     $('#warning-text').addClass('d-none');
                     $('#success-text').removeClass('d-none');
