@@ -27,7 +27,7 @@
                                     {!! $verification_status !!}
                                 </div>
                             </div>
-                            @if (!is_null($user->face_image))
+                            @if (!is_null($user->face_image) && $show_dataset)
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Image Dataset</label>
                                     <div class="col-sm-9 col-form-label">

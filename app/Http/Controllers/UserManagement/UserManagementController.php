@@ -230,11 +230,24 @@ class UserManagementController extends Controller
                  */
                 if (User::find($user->id)->hasRole('staff')) {
                     $data['verification_status_show'] = true;
+
+                    /**
+                     * Show Status
+                     */
                     if (!is_null($user->face_encoding)) {
                         $data['verification_status'] = '<span class="badge badge-success p-1 px-2 rounded-pill">Verify</span>';
                     } else {
                         $data['verification_status'] = '<span class="badge badge-danger p-1 px-2 rounded-pill">Unverify</span><a class="ms-2" href="#" data-bs-toggle="modal"
                                     data-bs-target="#verificationModal">Verify Now<i class="fas fa-external-link-alt ms-1"></i></a>';
+                    }
+
+                    /**
+                     * Show Dataset by User Login Role
+                     */
+                    if (User::find(Auth::user()->id)->hasRole('admin')) {
+                        $data['show_dataset'] = true;
+                    } else {
+                        $data['show_dataset'] = false;
                     }
                 } else {
                     $data['verification_status_show'] = false;
