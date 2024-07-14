@@ -100,10 +100,6 @@
                             <div class="bg-success text-center text-white py-2 fw-bold d-none" id="success-text">
                                 Capture Face Success
                             </div>
-                            <div class="text-center mt-2">
-                                <button type="button" class="btn btn-sm btn-warning mt-2" id="reset" disabled><i
-                                        class="fas fa-undo me-1"></i> Reset</button>
-                            </div>
                         </div>
                     </div>
                 </form>
@@ -115,7 +111,6 @@
             let video = document.getElementById('video');
             let canvas = document.getElementById('canvas');
             let context = canvas.getContext('2d');
-            let resetButton = document.getElementById('reset');
             let baseUrlPresence = document.URL.substr(0, document.URL.lastIndexOf('/'));
             let baseUrl = baseUrlPresence.split('/user-management').join('');
             let intervalId;
@@ -192,7 +187,6 @@
                 adjustVideoCanvas();
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
-                resetButton.disabled = false;
                 video.classList.add('d-none');
                 canvas.classList.remove('d-none');
                 $('#warning-text').addClass('d-none');
@@ -200,15 +194,6 @@
                 clearInterval(intervalId);
                 $("form").submit();
             }
-
-            resetButton.addEventListener('click', function() {
-                resetButton.disabled = true;
-                video.classList.remove('d-none');
-                canvas.classList.add('d-none');
-                $('#warning-text').removeClass('d-none');
-                $('#success-text').addClass('d-none');
-                detection();
-            });
 
             function stopCamera() {
                 localStream.forEach((track) => {
