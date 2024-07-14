@@ -227,7 +227,7 @@ class UserManagementController extends Controller
                 /**
                  * Show Verification Status
                  */
-                if (User::find($user->id)->hasRole('staff')) {
+                if (User::find($user->id)->hasRole('staff') && User::find(Auth::user()->id)->hasRole('admin')) {
                     $data['verification_status_show'] = true;
                     if (!is_null($user->face_encoding)) {
                         $data['verification_status'] = '<span class="badge badge-success p-1 px-2 rounded-pill">Verify</span>';
