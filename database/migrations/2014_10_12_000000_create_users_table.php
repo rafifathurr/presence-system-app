@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->json('face_encoding')->nullable();
+            $table->text('face_image')->nullable();
             $table->integer('division_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
