@@ -44,6 +44,8 @@
                                                 autoplay muted></video>
                                         </div>
                                         <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
+                                        <img src="" alt="" id="image"
+                                            class="form-control w-100 h-auto d-none">
                                         <input type="hidden" name="attachment" id="imageInput">
                                         <div class="bg-warning text-center py-2 fw-bold" id="warning-text">
                                             Please Take Your Face to Camera
@@ -282,7 +284,10 @@
 
                     resetButton.disabled = false;
                     video.classList.add('d-none');
-                    canvas.classList.remove('d-none');
+                    // canvas.classList.remove('d-none');
+
+                    $("#image").removeClass('d-none');
+                    $("#image").attr("src", dataURL);
 
                     $('#imageInput').val(dataURL);
                     $('#warning-text').addClass('d-none');
@@ -330,7 +335,9 @@
             resetButton.addEventListener('click', function() {
                 resetButton.disabled = true;
                 video.classList.remove('d-none');
-                canvas.classList.add('d-none');
+                // canvas.classList.add('d-none');
+                $("#image").addClass('d-none');
+
                 $('#imageInput').val('');
                 $('#warning-text').removeClass('d-none');
                 $('#success-text').addClass('d-none');
