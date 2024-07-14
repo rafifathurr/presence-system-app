@@ -97,8 +97,8 @@ Route::group(['middleware' => ['role:admin|staff']], function () {
      * Route User Management Module
      */
     Route::group(['controller' => UserManagementController::class, 'prefix' => 'user-management', 'as' => 'user-management.'], function () {
-        Route::post('verification', 'verificationUpdate')->name('verificationUpdate');
-        Route::get('face-verification', 'faceVerification')->name('faceVerification');
+        Route::match(['put', 'patch'], 'verification/{id}', 'verificationUpdate')->name('verificationUpdate');
+        Route::post('face-verification', 'faceVerification')->name('faceVerification');
     });
     Route::resource('user-management', UserManagementController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']])->parameters(['user-management' => 'id']);
 });

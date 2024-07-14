@@ -208,7 +208,6 @@
                 let distance = markerLatLng.distanceTo(circleLatLng);
 
                 if (distance <= radius) {
-                    $('#submit-button').attr('disabled', false);
                     setupCamera();
                 } else {
                     $('#submit-button').attr('disabled', true);
@@ -260,7 +259,7 @@
                         const descriptor = detections[0].descriptor;
                         verification(JSON.stringify(descriptor));
                     }
-                }, 5000);
+                }, 500);
             }
 
             function adjustVideoCanvas() {
@@ -276,16 +275,23 @@
 
             function snapCapture() {
                 adjustVideoCanvas();
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
-                resetButton.disabled = false;
-                video.classList.add('d-none');
-                canvas.classList.remove('d-none');
-                $('#imageInput').val(dataURL);
-                $('#warning-text').addClass('d-none');
-                $('#success-text').removeClass('d-none');
-                stopCamera();
-                clearInterval(intervalId);
+
+                if (dataURL != 'data:,') {
+
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    resetButton.disabled = false;
+                    video.classList.add('d-none');
+                    canvas.classList.remove('d-none');
+
+                    $('#imageInput').val(dataURL);
+                    $('#warning-text').addClass('d-none');
+                    $('#success-text').removeClass('d-none');
+                    $('#submit-button').attr('disabled', false);
+
+                    stopCamera();
+                    clearInterval(intervalId);
+                }
             }
 
             function verification(encoding) {
@@ -294,10 +300,10 @@
 
                 $.ajax({
                     url: "{{ url('user-management/face-verification') }}",
-                    type: 'GET',
+                    type: 'POST',
                     cache: false,
                     data: {
-                        // _token: token,
+                        _token: token,
                         id: user,
                         face_encoding: encoding
                     },

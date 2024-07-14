@@ -76,8 +76,10 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form class="forms-sample" method="post"
-                    action="{{ route('user-management.verificationUpdate', ['id' => $user->id]) }}">
+                    action="{{ route('user-management.verificationUpdate', ['id' => $user->id]) }}"
+                    enctype="multipart/form-data">
                     @csrf
+                    @method('patch')
                     <div class="modal-header">
                         <h4 class="modal-title" id="exampleModalLongTitle"><b>Face Verification User</b></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -86,7 +88,6 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="hidden" name="id" value="{{ $user->id }}">
                             <label for="attachment">Verification Face <span class="text-danger">*</span></label>
                             <div class="video-container">
                                 <video id="video" height="500" width="500" class="form-control" autoplay
@@ -94,6 +95,7 @@
                             </div>
                             <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                             <input type="hidden" name="face_encoding" id="face_encoding">
+                            <input type="hidden" name="face_image" id="face_image">
                             <div class="bg-warning text-center py-2 fw-bold" id="warning-text">
                                 Please Take Your Face to Camera
                             </div>
@@ -169,7 +171,7 @@
                         $('#face_encoding').val(JSON.stringify(descriptor));
                         snapCapture();
                     }
-                }, 5000);
+                }, 1000);
             }
 
             function adjustVideoCanvas() {
@@ -185,14 +187,18 @@
 
             function snapCapture() {
                 adjustVideoCanvas();
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
-                video.classList.add('d-none');
-                canvas.classList.remove('d-none');
-                $('#warning-text').addClass('d-none');
-                $('#success-text').removeClass('d-none');
-                clearInterval(intervalId);
-                $("form").submit();
+
+                if (dataURL != 'data:,') {
+                    $('#face_image').val(dataURL);
+                    $('#warning-text').addClass('d-none');
+                    $('#success-text').removeClass('d-none');
+
+                    clearInterval(intervalId);
+                    swalProcess();
+
+                    $("form").submit();
+                }
             }
 
             function stopCamera() {

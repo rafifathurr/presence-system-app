@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -462,7 +463,7 @@ class UserManagementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function verificationUpdate(Request $request)
+    public function verificationUpdate(Request $request, string $id)
     {
         try {
             /**
@@ -480,7 +481,7 @@ class UserManagementController extends Controller
             /**
              * Update User Record
              */
-            $user_update = User::where('id', $request->id)->update([
+            $user_update = User::where('id', $id)->update([
                 'face_encoding' => $request->face_encoding,
             ]);
 
@@ -488,10 +489,88 @@ class UserManagementController extends Controller
              * Validation Update User Record
              */
             if ($user_update) {
-                DB::commit();
-                return redirect()
-                    ->route('user-management.show', ['id' => $request->id])
-                    ->with(['success' => 'Successfully Verification User']);
+                /**
+                 * Get User
+                 */
+                $user = User::find($id);
+
+                /**
+                 * Attachment Path
+                 */
+                $path = 'public/uploads/face';
+                $path_store = 'storage/uploads/face';
+
+                /**
+                 * Check Last Path
+                 */
+                if (!Storage::exists($path)) {
+                    /**
+                     * Creating New Path
+                     */
+                    Storage::makeDirectory($path);
+                }
+
+                /**
+                 * File Configuration
+                 */
+                $image = str_replace('data:image/png;base64,', '', $request->face_image);
+                $image = str_replace(' ', '+', $image);
+                $file_name = $id . '_face_verification_' . $user->employee_number . '.png';
+                $directory = storage_path('app/public/uploads/face/');
+
+                /**
+                 * Check Path Exists
+                 */
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                $path_upload = $directory . $file_name;
+
+                /**
+                 * Save and Upload Image
+                 */
+                $fileSaved = file_put_contents($path_upload, base64_decode($image));
+
+                /**
+                 * Validation Face Attachment
+                 */
+                if ($fileSaved !== false) {
+                    /**
+                     * Update Face Attachment Record
+                     */
+                    $face_update_user = $user->update([
+                        'face_image' => $path_store . '/' . $file_name,
+                    ]);
+
+                    /**
+                     * Validation Face Update
+                     */
+                    if ($face_update_user) {
+                        DB::commit();
+                        return redirect()
+                            ->route('user-management.show', ['id' => $id])
+                            ->with(['success' => 'Successfully Verification User']);
+                    } else {
+                        /**
+                         * Failed Store Record
+                         */
+                        DB::rollBack();
+                        return redirect()
+                            ->back()
+                            ->with(['failed' => 'Failed Update Face Verification Image'])
+                            ->withInput();
+                    }
+                } else {
+                    /**
+                     * Failed Store Record
+                     */
+                    DB::rollBack();
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Failed Upload Face Verification Image'])
+                        ->withInput();
+                }
             } else {
                 /**
                  * Failed Store Record

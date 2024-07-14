@@ -177,7 +177,7 @@ class PresenceController extends Controller
                  * Check Path Exists
                  */
                 if (!file_exists($directory)) {
-                    mkdir($directory, 0777, true);
+                    mkdir($directory, 0755, true);
                 }
 
                 $path_upload = $directory . $file_name;
