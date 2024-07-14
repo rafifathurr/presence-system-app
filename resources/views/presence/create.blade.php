@@ -275,11 +275,11 @@
 
             function snapCapture() {
                 adjustVideoCanvas();
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 let dataURL = canvas.toDataURL('image/png');
 
                 if (dataURL != 'data:,') {
 
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
                     resetButton.disabled = false;
                     video.classList.add('d-none');
                     canvas.classList.remove('d-none');
