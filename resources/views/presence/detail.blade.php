@@ -76,5 +76,23 @@
     </div>
     @push('javascript-bottom')
         @include('js.presence.script')
+        <script>
+            let map = L.map('map', {
+                editable: true,
+                minZoom: 2.4,
+                maxZoom: 22,
+                attributionControl: false,
+                drawControl: true,
+                cursor: true,
+                maxBounds: [
+                    [90, -180],
+                    [-90, 180]
+                ]
+            }).setView([-0.789275, 118.92132700000002], 5);
+            tileLayer.addTo(map);
+
+            L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map).bindPopup($('#address').val()).openPopup();
+            map.setView([$('#latitude').val(), $('#longitude').val()], 17);
+        </script>
     @endpush
 @endsection
