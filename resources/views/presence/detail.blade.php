@@ -23,7 +23,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Attachment</label>
                             <div class="col-sm-9 col-form-label">
-                                <img width="50%" alt="upload" src="{{ asset($presence->attachment) }}"
+                                <img width="25%" alt="upload" src="{{ asset($presence->attachment) }}"
                                     class="rounded-3 border border-1-default">
                             </div>
                         </div>
@@ -76,26 +76,5 @@
     </div>
     @push('javascript-bottom')
         @include('js.presence.script')
-        {{-- <script>
-            let map = L.map('map', {
-                editable: true,
-                minZoom: 2.4,
-                maxZoom: 22,
-                attributionControl: false,
-                drawControl: true,
-                cursor: true,
-                maxBounds: [
-                    [90, -180],
-                    [-90, 180]
-                ]
-            }).setView([-0.789275, 118.92132700000002], 5);
-            tileLayer.addTo(map);
-
-            L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map).bindPopup($('#address').val()).openPopup();
-            L.circle([$('#latitude').val(), $('#longitude').val()], $('#radius').val()).addTo(map)
-            map.setView([$('#latitude').val(), $('#longitude').val()], 15);
-
-            detailDatatables();
-        </script> --}}
     @endpush
 @endsection
