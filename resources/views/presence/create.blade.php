@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="text-center mt-2">
                                             <button type="button" class="btn btn-sm btn-warning mt-2" id="reset"
-                                                disabled><i class="fas fa-undo me-1"></i> Reset</button>
+                                                disabled><i class="fas fa-undo me-1"></i> Retry</button>
                                         </div>
                                     </div>
                                 </div>
@@ -318,10 +318,13 @@
                             snapCapture();
                         } else {
                             swalError(data.message);
+                            stopCamera();
+                            resetButton.disabled = false;
                         }
                     },
                     error: function(xhr, error, code) {
                         swalError(error);
+                        location.reload();
                     }
                 });
             }
