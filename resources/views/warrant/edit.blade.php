@@ -22,14 +22,14 @@
                                     <div class="form-group">
                                         <label for="date_start">Date Start <span class="text-danger">*</span></label>
                                         <input type="date" class="form-control" id="date_start" name="date_start"
-                                            min="{{ date('Y-m-d') }}" value="{{ $warrant->date_start }}" required>
+                                            value="{{ $warrant->date_start }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="date_finish">Date Finish <span class="text-danger">*</span></label>
                                         <input type="date" class="form-control" id="date_finish" name="date_finish"
-                                            min="{{ date('Y-m-d') }}" value="{{ $warrant->date_finish }}" required>
+                                            value="{{ $warrant->date_finish }}" required>
                                     </div>
                                 </div>
                             </div>
