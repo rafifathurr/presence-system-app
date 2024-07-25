@@ -175,12 +175,31 @@
             tileLayer.addTo(map);
 
             map.on('locationfound', function(e) {
-                if (marker == null) {
-                    marker = L.marker(e.latlng).addTo(map).bindPopup("Current Location").openPopup();
-                } else {
-                    marker.setLatLng(e.latlng);
-                }
-                map.setView(e.latlng, 17);
+
+                $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + e.latlng.lat + '&lon=' + e
+                    .latlng.lng, {}).done(function(data) {
+
+                    let address = data.address.road + ', ' + data.address.city_district +
+                        ', ' + data.address.city + ', ' + data.address.country;
+
+                    if (marker == null) {
+                        marker = L.marker(e.latlng).addTo(map).bindPopup('<b>Current Location </b>: ' + address)
+                            .openPopup();
+                    } else {
+                        marker.setLatLng(e.latlng).bindPopup('<b>Current Location </b>: ' + address)
+                            .openPopup();
+                    }
+
+                    if (circleMarker != null) {
+                        map.removeLayer(circleMarker);
+                        circleMarker = null;
+                    }
+
+                    map.setView(e.latlng, 17);
+
+                }).fail(function(xhr, status, error) {
+                    swalError(status);
+                });
             })
 
             map.on('locationerror', function(e) {

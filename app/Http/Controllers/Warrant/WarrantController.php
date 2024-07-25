@@ -38,10 +38,19 @@ class WarrantController extends Controller
         /**
          * Get All Users
          */
+        $user_warrant_record_id = WarrantUser::whereHas('warrant', function ($query) {
+            $query->where('date_finish', '>=', date('Y-m-d'));
+        })
+            ->whereNull('deleted_at')
+            ->groupBy('user_id')
+            ->pluck('user_id')
+            ->toArray();
+
         $data['users'] = User::whereNull('deleted_at')
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'staff');
             })
+            ->whereNotIn('id', $user_warrant_record_id)
             ->get();
 
         /**
@@ -112,7 +121,7 @@ class WarrantController extends Controller
                     /**
                      * Allow Edit or Delete when presence empty
                      */
-                    if (empty($data->presence->toArray())) {
+                    if (empty($data->presence->toArray()) && date('Y-m-d') <= $data->date_finish) {
                         $btn_action .= '<a href="' . route('warrant.edit', ['id' => $data->id]) . '" class="btn btn-sm btn-warning my-1 ms-1" title="Ubah"><i class="fas fa-pencil-alt"></i></a>';
                         $btn_action .= '<button class="btn btn-sm btn-danger my-1 ms-1" onclick="destroy(' . $data->id . ')" title="Hapus"><i class="fas fa-trash"></i></button>';
                     }
@@ -363,32 +372,47 @@ class WarrantController extends Controller
             /**
              * Get Warrant from id
              */
-            $warrant = Warrant::with(['warrantUser.user'])->find($id);
+            $warrant = Warrant::with(['warrantUser.user', 'presence'])->find($id);
 
-            /**
-             * Validation Warrant id
-             */
-            if (!is_null($warrant)) {
-                $data['warrant'] = $warrant;
-
+            if (empty($warrant->presence->toArray()) && date('Y-m-d') <= $warrant->date_finish) {
                 /**
-                 * Get All Users
+                 * Validation Warrant id
                  */
-                $data['users'] = User::whereNull('deleted_at')
-                    ->whereHas('roles', function ($query) {
-                        $query->where('name', 'staff');
+                if (!is_null($warrant)) {
+                    $data['warrant'] = $warrant;
+
+                    $user_warrant_record_id = WarrantUser::whereHas('warrant', function ($query) {
+                        $query->where('date_finish', '>=', date('Y-m-d'));
                     })
-                    ->get();
+                        ->whereNull('deleted_at')
+                        ->groupBy('user_id')
+                        ->pluck('user_id')
+                        ->toArray();
 
-                /**
-                 * Get All Location Work
-                 */
-                $data['location_works'] = LocationWork::whereNull('deleted_by')->whereNull('deleted_at')->get();
-                return view('warrant.edit', $data);
+                    /**
+                     * Get All Users
+                     */
+                    $data['users'] = User::whereNull('deleted_at')
+                        ->whereHas('roles', function ($query) {
+                            $query->where('name', 'staff');
+                        })
+                        ->whereNotIn('id', $user_warrant_record_id)
+                        ->get();
+
+                    /**
+                     * Get All Location Work
+                     */
+                    $data['location_works'] = LocationWork::whereNull('deleted_by')->whereNull('deleted_at')->get();
+                    return view('warrant.edit', $data);
+                } else {
+                    return redirect()
+                        ->back()
+                        ->with(['failed' => 'Invalid Request!']);
+                }
             } else {
                 return redirect()
                     ->back()
-                    ->with(['failed' => 'Invalid Request!']);
+                    ->with(['failed' => 'Unable To Edit!']);
             }
         } catch (Exception $e) {
             return redirect()

@@ -147,15 +147,10 @@
                     let address = data.address.road + ', ' + data.address.city_district +
                         ', ' + data.address.city + ', ' + data.address.country;
 
-                    const popup = L.popup({
-                        closeOnClick: false,
-                        autoClose: false
-                    }).setContent('<b>Current Location : </b>' + address);
-
                     if (marker == null) {
-                        marker = L.marker(e.latlng).addTo(map).bindPopup(popup).openPopup().off('click');
+                        marker = L.marker(e.latlng).addTo(map).bindPopup('<b>Current Location </b>: ' + address).openPopup();
                     } else {
-                        marker.setLatLng(e.latlng);
+                        marker.setLatLng(e.latlng).bindPopup('<b>Current Location </b>: ' + address).openPopup();
                     }
 
                     $('#latitude').val(e.latlng.lat);

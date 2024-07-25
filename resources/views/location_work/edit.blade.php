@@ -121,7 +121,6 @@
                     swalError(status);
                 });
 
-
             });
 
             function setRadius(element) {

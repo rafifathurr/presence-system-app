@@ -188,7 +188,8 @@
             });
             tileLayer.addTo(map);
 
-            L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map).bindPopup($('#address').val()).openPopup();
+            L.marker([$('#latitude').val(), $('#longitude').val()]).addTo(map).bindPopup('<b>Location Work</b>: ' + $(
+                '#address').val()).openPopup();
             L.circle([$('#latitude').val(), $('#longitude').val()], parseFloat($('#radius').val())).addTo(map);
             map.setView([$('#latitude').val(), $('#longitude').val()], 17);
 
