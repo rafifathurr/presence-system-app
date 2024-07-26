@@ -47,6 +47,9 @@
                     orderable: false,
                     searchable: false
                 },
+            ],
+            order: [
+                [0, 'desc']
             ]
         });
     }
