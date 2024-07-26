@@ -39,9 +39,8 @@
                                         <input type="hidden" id="user" value="{{ Auth::user()->id }}">
                                         <label for="attachment">Photo <span class="text-danger">*</span></label>
                                         <div class="video-container">
-                                            {{-- <video id="video" class="form-control w-100 h-auto"></video> --}}
                                             <video id="video" height="500" width="500" class="form-control"
-                                                autoplay muted></video>
+                                                autoplay loop muted playsinline></video>
                                         </div>
                                         <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                                         <img src="" alt="" id="image"
@@ -148,9 +147,11 @@
                         ', ' + data.address.city + ', ' + data.address.country;
 
                     if (marker == null) {
-                        marker = L.marker(e.latlng).addTo(map).bindPopup('<b>Current Location </b>: ' + address).openPopup();
+                        marker = L.marker(e.latlng).addTo(map).bindPopup('<b>Current Location </b>: ' + address)
+                            .openPopup();
                     } else {
-                        marker.setLatLng(e.latlng).bindPopup('<b>Current Location </b>: ' + address).openPopup();
+                        marker.setLatLng(e.latlng).bindPopup('<b>Current Location </b>: ' + address)
+                    .openPopup();
                     }
 
                     $('#latitude').val(e.latlng.lat);

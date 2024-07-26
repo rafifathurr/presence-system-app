@@ -99,8 +99,8 @@
                         <div class="form-group">
                             <label for="attachment">Verification Face <span class="text-danger">*</span></label>
                             <div class="video-container">
-                                <video id="video" height="500" width="500" class="form-control" autoplay
-                                    muted></video>
+                                <video id="video" height="500" width="500" class="form-control" autoplay loop muted
+                                    playsinline></video>
                             </div>
                             <canvas id="canvas" class="form-control w-100 h-auto d-none"></canvas>
                             <input type="hidden" name="face_encoding" id="face_encoding">
