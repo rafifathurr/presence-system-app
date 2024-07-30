@@ -39,9 +39,10 @@ class WarrantController extends Controller
          * Get All Users
          */
         $user_warrant_record_id = WarrantUser::whereHas('warrant', function ($query) {
-            $query->where('date_finish', '>=', date('Y-m-d'));
+            $query->whereNull('deleted_at')->whereNull('deleted_by')->where('date_finish', '>=', date('Y-m-d'));
         })
             ->whereNull('deleted_at')
+            ->whereNull('deleted_by')
             ->groupBy('user_id')
             ->pluck('user_id')
             ->toArray();
@@ -382,9 +383,10 @@ class WarrantController extends Controller
                     $data['warrant'] = $warrant;
 
                     $user_warrant_record_id = WarrantUser::whereHas('warrant', function ($query) {
-                        $query->where('date_finish', '>=', date('Y-m-d'));
+                        $query->whereNull('deleted_at')->whereNull('deleted_by')->where('date_finish', '>=', date('Y-m-d'));
                     })
                         ->whereNull('deleted_at')
+                        ->whereNull('deleted_by')
                         ->groupBy('user_id')
                         ->pluck('user_id')
                         ->toArray();
