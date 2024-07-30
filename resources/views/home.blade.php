@@ -24,14 +24,14 @@
     </div>
     @push('javascript-bottom')
         <script>
+            updateTimestamp();
+            setInterval(updateTimestamp, 1000);
+
             function updateTimestamp() {
                 var now = new Date();
                 var formattedTime = now.toLocaleTimeString();
                 $('#timestamp').text(formattedTime);
             }
-
-            updateTimestamp(); // Initial call to set the time immediately
-            setInterval(updateTimestamp, 1000); // Update every second
         </script>
     @endpush
 @endsection

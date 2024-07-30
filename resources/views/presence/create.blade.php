@@ -257,7 +257,7 @@
                         const descriptor = detections[0].descriptor;
                         verification(JSON.stringify(descriptor));
                     }
-                }, 500);
+                }, 250);
             }
 
             function adjustVideoCanvas() {
