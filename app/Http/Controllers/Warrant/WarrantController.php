@@ -42,7 +42,6 @@ class WarrantController extends Controller
             $query->whereNull('deleted_at')->whereNull('deleted_by')->where('date_finish', '>=', date('Y-m-d'));
         })
             ->whereNull('deleted_at')
-            ->whereNull('deleted_by')
             ->groupBy('user_id')
             ->pluck('user_id')
             ->toArray();
@@ -386,7 +385,6 @@ class WarrantController extends Controller
                         $query->whereNull('deleted_at')->whereNull('deleted_by')->where('date_finish', '>=', date('Y-m-d'));
                     })
                         ->whereNull('deleted_at')
-                        ->whereNull('deleted_by')
                         ->groupBy('user_id')
                         ->pluck('user_id')
                         ->toArray();
