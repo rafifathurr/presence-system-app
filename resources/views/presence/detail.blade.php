@@ -46,15 +46,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Updated By</label>
+                            <label class="col-sm-3 col-form-label">Warrant</label>
                             <div class="col-sm-9 col-form-label">
-                                {{ $presence->updatedBy->name }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Updated At</label>
-                            <div class="col-sm-9 col-form-label">
-                                {{ date('d F Y H:i:s', strtotime($presence->updated_at)) }}
+                                <a target="_blank"
+                                    href="{{ route('warrant.show', ['id' => $presence->warrant_id]) }}">{{ $presence->warrant->name }}<i
+                                        class="fas fa-external-link-alt ms-1"></i></a>
                             </div>
                         </div>
                         <div class="form-group row">
