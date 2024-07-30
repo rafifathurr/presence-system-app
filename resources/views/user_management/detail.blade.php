@@ -180,7 +180,7 @@
                         $('#face_encoding').val(JSON.stringify(descriptor));
                         snapCapture();
                     }
-                }, 250);
+                }, 150);
             }
 
             function adjustVideoCanvas() {
