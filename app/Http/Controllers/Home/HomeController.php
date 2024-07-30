@@ -41,7 +41,7 @@ class HomeController extends Controller
                  */
                 $current_presence_check = Presence::whereNull('deleted_by')
                     ->whereNull('deleted_at')
-                    ->whereDate('created_at', date('Y-m-d'))
+                    ->where('warrant_id', $warrant_check->id)
                     ->where('created_by', Auth::user()->id)
                     ->first();
 
