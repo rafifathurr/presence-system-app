@@ -31,6 +31,7 @@
                             <label class="col-sm-3 col-form-label">Activity Attachment</label>
                             <div class="col-sm-9 col-form-label">
                                 <img width="25%" alt="upload" src="{{ asset($presence->activity_attachment) }}"
+                                onerror="this.onerror=null;this.src='{{ asset('assets/img/image-not-found.jpg') }}'"
                                     class="rounded-3 border border-1-default">
                             </div>
                         </div>
