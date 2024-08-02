@@ -168,8 +168,7 @@
                 $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + e.latlng.lat + '&lon=' + e
                     .latlng.lng, {}).done(function(data) {
 
-                    let address = data.address.road + ', ' + data.address.city_district +
-                        ', ' + data.address.city + ', ' + data.address.country;
+                    let address = data.display_name;
 
                     if (marker == null) {
                         marker = L.marker(e.latlng, {
