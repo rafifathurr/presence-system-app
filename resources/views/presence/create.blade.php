@@ -51,12 +51,19 @@
                                         </div>
                                         <div class="bg-success text-center text-white py-2 fw-bold d-none"
                                             id="success-text">
-
                                         </div>
                                         <div class="text-center mt-2">
                                             <button type="button" class="btn btn-sm btn-warning mt-2" id="reset"
                                                 disabled><i class="fas fa-undo me-1"></i> Retry</button>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="attachment">Activity Attachment <span
+                                                class="text-danger">*</span></label>
+                                        <input id="activity_attachment" type="file" accept="image/*;capture=camera"
+                                            class="form-control" name="activity_attachment">
+                                        <img src="" alt="" id="img_activity_attachment" class="mt-3 d-none"
+                                            width="100%">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -138,6 +145,24 @@
             });
             tileLayer.addTo(map);
 
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            var blueIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
             map.on('locationfound', function(e) {
 
                 $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + e.latlng.lat + '&lon=' + e
@@ -147,11 +172,22 @@
                         ', ' + data.address.city + ', ' + data.address.country;
 
                     if (marker == null) {
-                        marker = L.marker(e.latlng).addTo(map).bindPopup('<b>Current Location </b>: ' + address)
+                        marker = L.marker(e.latlng, {
+                                icon: greenIcon
+                            }).addTo(map).bindPopup('<b>Current Location </b>: ' +
+                                address, {
+                                    closeOnClick: false,
+                                    autoClose: false
+                                })
                             .openPopup();
                     } else {
-                        marker.setLatLng(e.latlng).bindPopup('<b>Current Location </b>: ' + address)
-                    .openPopup();
+                        marker.setLatLng(e.latlng, {
+                                icon: greenIcon
+                            }).bindPopup('<b>Current Location </b>: ' + address, {
+                                closeOnClick: false,
+                                autoClose: false
+                            })
+                            .openPopup();
                     }
 
                     $('#latitude').val(e.latlng.lat);
@@ -183,6 +219,13 @@
                 alert(message);
             });
 
+            $('#activity_attachment').on('change', function(event) {
+                var file = event.target.files[0];
+                var fileURL = URL.createObjectURL(file);
+                $('#img_activity_attachment').attr('src', fileURL);
+                $('#img_activity_attachment').removeClass('d-none');
+            });
+
             function warrantCompareCurrent() {
 
                 const popup = L.popup({
@@ -191,8 +234,13 @@
                 }).setContent('<b>Warrant Location : </b>' + $(
                     '#warrant_address').val());
 
-                let markerWarrant = L.marker([$('#warrant_latitude').val(), $('#warrant_longitude').val()]).addTo(map)
-                    .bindPopup(popup)
+                let markerWarrant = L.marker([$('#warrant_latitude').val(), $('#warrant_longitude').val()], {
+                        icon: blueIcon
+                    }).addTo(map)
+                    .bindPopup(popup, {
+                        closeOnClick: false,
+                        autoClose: false
+                    })
                     .openPopup();
                 let circleMarkerWarrant = L.circle([$('#warrant_latitude').val(), $('#warrant_longitude').val()], parseFloat($(
                     '#warrant_radius').val())).addTo(map);
@@ -201,7 +249,9 @@
                 let circleLatLng = circleMarkerWarrant.getLatLng();
                 let radius = circleMarkerWarrant.getRadius();
 
-                map.fitBounds([marker.getLatLng(), markerWarrant.getLatLng()]);
+                map.fitBounds([marker.getLatLng(), markerWarrant.getLatLng()], {
+                    padding: [150, 150]
+                });
 
                 let distance = markerLatLng.distanceTo(circleLatLng);
 
@@ -280,7 +330,6 @@
 
                     resetButton.disabled = false;
                     video.classList.add('d-none');
-                    // canvas.classList.remove('d-none');
 
                     $("#image").removeClass('d-none');
                     $("#image").attr("src", dataURL);
@@ -315,6 +364,7 @@
                         } else {
                             swalError(data.message);
                             stopCamera();
+                            clearInterval(intervalId);
                             resetButton.disabled = false;
                         }
                     },
@@ -334,7 +384,6 @@
             resetButton.addEventListener('click', function() {
                 resetButton.disabled = true;
                 video.classList.remove('d-none');
-                // canvas.classList.add('d-none');
                 $("#image").addClass('d-none');
 
                 $('#imageInput').val('');

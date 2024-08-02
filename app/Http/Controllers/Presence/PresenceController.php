@@ -170,7 +170,7 @@ class PresenceController extends Controller
                 $image = str_replace(' ', '+', $image);
                 $exploded_name = explode(' ', strtolower(Auth::user()->name));
                 $name_presence = implode('_', $exploded_name);
-                $file_name = $presence->id . '_' . $request->warrant . '_' . $name_presence . '.png';
+                $file_name = $presence->id . '_' . $request->warrant . '_presence_' . $name_presence . '.png';
                 $directory = storage_path('app/public/uploads/presence/');
 
                 /**
@@ -191,21 +191,40 @@ class PresenceController extends Controller
                  * Validation Presence Attachment
                  */
                 if ($fileSaved !== false) {
-                    /**
-                     * Update Presence Attachment Record
-                     */
-                    $presence_update = Presence::where('id', $presence->id)->update([
-                        'attachment' => $path_store . '/' . $file_name,
-                    ]);
+                    $file = $request->file('activity_attachment');
+                    $file_name_activity = $presence->id . '_' . $request->warrant . '_activity_' . $name_presence . '.' . $file->getClientOriginalExtension();
 
-                    /**
-                     * Validation Presence Update
-                     */
-                    if ($presence_update) {
-                        DB::commit();
-                        return redirect()
-                            ->route('presence.index')
-                            ->with(['success' => 'Successfully Add Presence']);
+                    // Uploading File
+                    $file->storePubliclyAs($path, $file_name_activity);
+
+                    // Check Upload Success
+                    if (Storage::exists($path . '/' . $file_name_activity)) {
+                        /**
+                         * Update Presence Attachment Record
+                         */
+                        $presence_update = Presence::where('id', $presence->id)->update([
+                            'attachment' => $path_store . '/' . $file_name,
+                            'activity_attachment' => $path_store . '/' . $file_name_activity,
+                        ]);
+
+                        /**
+                         * Validation Presence Update
+                         */
+                        if ($presence_update) {
+                            DB::commit();
+                            return redirect()
+                                ->route('presence.index')
+                                ->with(['success' => 'Successfully Add Presence']);
+                        } else {
+                            /**
+                             * Failed Store Record
+                             */
+                            DB::rollBack();
+                            return redirect()
+                                ->back()
+                                ->with(['failed' => 'Failed Update Attachment Presence'])
+                                ->withInput();
+                        }
                     } else {
                         /**
                          * Failed Store Record

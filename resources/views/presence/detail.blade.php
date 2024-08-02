@@ -28,6 +28,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Activity Attachment</label>
+                            <div class="col-sm-9 col-form-label">
+                                <img width="25%" alt="upload" src="{{ asset($presence->activity_attachment) }}"
+                                    class="rounded-3 border border-1-default">
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Latitude, Longitude</label>
                             <div class="col-sm-9 col-form-label">
                                 <a target="_blank"
